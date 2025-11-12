@@ -1,14 +1,15 @@
 package com.aplimoviles.bookswipe
 
 import android.app.Application
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.Firebase
+import com.google.firebase.initialize
 
 class MyApplication: Application() {
 
-    private lateinit var auth: FirebaseAuth
-
     override fun onCreate() {
         super.onCreate()
-        auth = FirebaseAuth.getInstance()
+        // Inicializa todos los recursos de firebase
+        Firebase.initialize(this);
+        //
     }
 }

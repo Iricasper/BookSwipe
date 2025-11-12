@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+//    implementation(libs.androidx.navigation) HAY QUE IMPLEMENTAR NAVEGACIÓN
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
     implementation(libs.androidx.credentials)
