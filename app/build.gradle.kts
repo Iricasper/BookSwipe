@@ -63,4 +63,9 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    // FIREBASE BOM PLATFORM
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    // FIREBASE REALTIME DATABASE LIBRARY
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-database")
 }
