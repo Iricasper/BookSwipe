@@ -43,6 +43,8 @@ android {
 }
 
 dependencies {
+    val nav_version = "2.9.6"
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -73,4 +75,6 @@ dependencies {
     implementation("androidx.credentials:credentials:1.3.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    // Navigation compose
+    implementation("androidx.navigation:navigation-compose:$nav_version")
 }
