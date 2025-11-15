@@ -77,4 +77,6 @@ dependencies {
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     // Navigation compose
     implementation("androidx.navigation:navigation-compose:$nav_version")
+    // Más iconos (para el toggle de la contraseña)
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 }

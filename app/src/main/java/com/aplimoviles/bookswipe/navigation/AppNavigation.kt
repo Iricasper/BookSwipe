@@ -4,27 +4,32 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.aplimoviles.bookswipe.auth.LoginScreen
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
 
-// si registro --> RegistroScreen
-// si login -->
-// si home
+sealed class Screen(val route: String) {
+    object Login : Screen("login")
+    object Register : Screen("register")
+    object Home : Screen("home")
+}
 
 @Composable
-fun App() {
+fun AppNavigation(auth: FirebaseAuth, database: DatabaseReference) {
     val navController = rememberNavController()
 
     NavHost(
         navController,
-        startDestination = "home"
+        startDestination = if (auth.currentUser != null) Screen.Home.route else Screen.Login.route
     ) {
-        composable("home") {
-            // Pantalla home
+        composable(Screen.Home.route) {
+//            HomeScreen(auth, navController)
         }
-        composable("login") {
-            // Pantalla login
+        composable(Screen.Login.route) {
+            LoginScreen(auth, navController)
         }
-        composable("register") {
-            // Pantalla register
+        composable(Screen.Register.route) {
+//            RegisterScreen(auth, database, navController)
         }
     }
 }
