@@ -10,6 +10,5 @@ class MyApplication: Application() {
         super.onCreate()
         // Inicializa todos los recursos de firebase
         Firebase.initialize(this);
-        //
     }
 }

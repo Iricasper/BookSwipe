@@ -1,8 +1,10 @@
 package com.aplimoviles.bookswipe.auth
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,9 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,13 +27,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.aplimoviles.bookswipe.R
+import com.aplimoviles.bookswipe.navigation.Screen
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -44,6 +51,12 @@ fun LoginScreen(auth: FirebaseAuth, navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+//        Image(
+//            painter = painterResource(id = R.drawable.bookswipe),
+//            contentDescription = "BookSwipe Logo",
+//            modifier = Modifier.padding(bottom = 128.dp),
+//            contentScale = ContentScale.Fit
+//        )
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -88,21 +101,49 @@ fun LoginScreen(auth: FirebaseAuth, navController: NavController) {
                 }
             )
             Spacer(modifier = Modifier.height(16.dp))
-//            Button() { }
-            Spacer(modifier = Modifier.height(8.dp))
-//            TextButton(
-//               onClick = { navController.navigate(Screen.Register.route) },
-//                modifier = Modifier.fillMaxWidth()
-//            ) {
-//                Text("Crear cuenta")
-//            }
+            Button(
+                onClick = {
+                    if (email.isBlank() || password.isBlank()) {
+                        Toast.makeText(context, "Los campos no pueden estar vacíos", Toast.LENGTH_SHORT).show()
+                    return@Button
+                    } else if (password.length < 6) {
+                        Toast.makeText(context, "La contraseña debe tener 6 caracteres o más", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            navController.navigate(Screen.Home.route) {
+                                popUpTo(Screen.Login.route) { inclusive = true }
+                            }
+                        } else {
+                            Toast.makeText(context, "Error: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Login")
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "¿No tienes una cuenta?",
+                    color = Color.Gray
+                )
+                TextButton(
+                    onClick = { navController.navigate(Screen.Register.route) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Crear cuenta")
+                }
+            }
         }
     }
-
-}
-
-@Preview
-@Composable
-fun LoginScreenPreview() {
-
 }

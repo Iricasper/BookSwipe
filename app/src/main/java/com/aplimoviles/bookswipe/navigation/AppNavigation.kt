@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.aplimoviles.bookswipe.auth.HomeScreen
 import com.aplimoviles.bookswipe.auth.LoginScreen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -23,7 +24,7 @@ fun AppNavigation(auth: FirebaseAuth, database: DatabaseReference) {
         startDestination = if (auth.currentUser != null) Screen.Home.route else Screen.Login.route
     ) {
         composable(Screen.Home.route) {
-//            HomeScreen(auth, navController)
+            HomeScreen(auth, navController)
         }
         composable(Screen.Login.route) {
             LoginScreen(auth, navController)

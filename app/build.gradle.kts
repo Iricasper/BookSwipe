@@ -53,7 +53,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-//    implementation(libs.androidx.navigation) HAY QUE IMPLEMENTAR NAVEGACIÓN
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
     implementation(libs.androidx.credentials)
@@ -75,7 +74,7 @@ dependencies {
     implementation("androidx.credentials:credentials:1.3.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
-    // Navigation compose
+    // Navigation con compose
     implementation("androidx.navigation:navigation-compose:$nav_version")
     // Más iconos (para el toggle de la contraseña)
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
