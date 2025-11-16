@@ -1,6 +1,6 @@
 package com.aplimoviles.bookswipe.model
 
-data class User(
+data class Usuario(
 
     var uid: String = "",
     var nombre: String = "",

@@ -47,7 +47,9 @@ fun LoginScreen(auth: FirebaseAuth, navController: NavController) {
     var passwordVisible by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -58,8 +60,7 @@ fun LoginScreen(auth: FirebaseAuth, navController: NavController) {
 //            contentScale = ContentScale.Fit
 //        )
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TextField(
                 value = email,
@@ -73,8 +74,7 @@ fun LoginScreen(auth: FirebaseAuth, navController: NavController) {
                         contentDescription = null,
                         tint = Color.Gray
                     )
-                }
-            )
+                })
             Spacer(modifier = Modifier.height(8.dp))
             TextField(
                 value = password,
@@ -98,31 +98,36 @@ fun LoginScreen(auth: FirebaseAuth, navController: NavController) {
                             tint = Color.Gray
                         )
                     }
-                }
-            )
+                })
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
                     if (email.isBlank() || password.isBlank()) {
-                        Toast.makeText(context, "Los campos no pueden estar vacíos", Toast.LENGTH_SHORT).show()
-                    return@Button
+                        Toast.makeText(
+                            context, "Los campos no pueden estar vacíos", Toast.LENGTH_SHORT
+                        ).show()
+                        return@Button
                     } else if (password.length < 6) {
-                        Toast.makeText(context, "La contraseña debe tener 6 caracteres o más", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "La contraseña debe tener 6 caracteres o más",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         return@Button
                     }
 
-                auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            navController.navigate(Screen.Home.route) {
-                                popUpTo(Screen.Login.route) { inclusive = true }
+                    auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                navController.navigate(Screen.Home.route) {
+                                    popUpTo(Screen.Login.route) { inclusive = true }
+                                }
+                            } else {
+                                Toast.makeText(
+                                    context, "Error: ${task.exception?.message}", Toast.LENGTH_SHORT
+                                ).show()
                             }
-                        } else {
-                            Toast.makeText(context, "Error: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                         }
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
+                }, modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Login")
             }
@@ -134,8 +139,7 @@ fun LoginScreen(auth: FirebaseAuth, navController: NavController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "¿No tienes una cuenta?",
-                    color = Color.Gray
+                    text = "¿No tienes una cuenta?", color = Color.Gray
                 )
                 TextButton(
                     onClick = { navController.navigate(Screen.Register.route) },

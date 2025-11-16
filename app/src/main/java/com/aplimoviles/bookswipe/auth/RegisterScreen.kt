@@ -1,7 +1,10 @@
 package com.aplimoviles.bookswipe.auth
 
+import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +22,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +38,14 @@ import com.google.firebase.database.DatabaseReference
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import com.aplimoviles.bookswipe.model.Usuario
+import com.aplimoviles.bookswipe.navigation.Screen
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 
 @Composable
 fun RegisterScreen(auth: FirebaseAuth, database: DatabaseReference, navController: NavController) {
@@ -63,22 +75,21 @@ fun RegisterScreen(auth: FirebaseAuth, database: DatabaseReference, navControlle
                     contentDescription = null,
                     tint = Color.Gray
                 )
-            }
-        )
+            })
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email
+            ),
             leadingIcon = {
                 Icon(
-                    imageVector = Icons.Default.Email,
-                    contentDescription = null,
-                    tint = Color.Gray
+                    imageVector = Icons.Default.Email, contentDescription = null, tint = Color.Gray
                 )
-            }
-        )
+            })
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = phone,
@@ -94,19 +105,18 @@ fun RegisterScreen(auth: FirebaseAuth, database: DatabaseReference, navControlle
                     contentDescription = null,
                     tint = Color.Gray
                 )
-            }
-        )
+            })
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Contraseña") },
             modifier = Modifier.fillMaxWidth(),
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             leadingIcon = {
                 Icon(
-                    imageVector = Icons.Default.Lock,
-                    contentDescription = null,
-                    tint = Color.Gray
+                    imageVector = Icons.Default.Lock, contentDescription = null, tint = Color.Gray
                 )
             },
             trailingIcon = {
@@ -117,19 +127,18 @@ fun RegisterScreen(auth: FirebaseAuth, database: DatabaseReference, navControlle
                         tint = Color.Gray
                     )
                 }
-            }
-        )
+            })
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = repeatPassword,
             onValueChange = { repeatPassword = it },
             label = { Text("Repite la contraseña") },
             modifier = Modifier.fillMaxWidth(),
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             leadingIcon = {
                 Icon(
-                    imageVector = Icons.Default.Lock,
-                    contentDescription = null,
-                    tint = Color.Gray
+                    imageVector = Icons.Default.Lock, contentDescription = null, tint = Color.Gray
                 )
             },
             trailingIcon = {
@@ -140,13 +149,107 @@ fun RegisterScreen(auth: FirebaseAuth, database: DatabaseReference, navControlle
                         tint = Color.Gray
                     )
                 }
-            }
-        )
+            })
         Spacer(modifier = Modifier.height(8.dp))
-//        Button(
-//            onClick = {
-//                when {}
-//            }
-//        )
+        Button(
+            onClick = {
+                when {
+                    name.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty() || repeatPassword.isEmpty() -> {
+                        Toast.makeText(
+                            context, "Los campos no pueden estar vacíos", Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                        Toast.makeText(context, "El email no es válido", Toast.LENGTH_SHORT).show()
+                    }
+
+                    phone.length != 9 -> {
+                        Toast.makeText(
+                            context, "El teléfono debe tener 9 caracteres", Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    password.length < 6 -> {
+                        Toast.makeText(
+                            context,
+                            "La contraseña debe tener 6 o más caracteres",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    !password.equals(repeatPassword) -> {
+                        Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    else -> {
+                        auth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener { authTask ->
+                                if (authTask.isSuccessful) {
+                                    val currentUser = auth.currentUser
+                                    currentUser?.let { user ->
+                                        val uid = user.uid
+                                        val usuarioRegistrado = Usuario(
+                                            uid = uid,
+                                            nombre = name,
+                                            correo = email,
+                                            telefono = phone
+                                        )
+                                        database.child("usuario").child(uid)
+                                            .setValue(usuarioRegistrado).addOnSuccessListener {
+                                                Toast.makeText(
+                                                    context,
+                                                    "Usuario registrado",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                navController.navigate(Screen.Login.route) {
+                                                    popUpTo(Screen.Register.route) {
+                                                        inclusive = true
+                                                    }
+                                                }
+                                            }.addOnFailureListener { dbError ->
+                                                Toast.makeText(
+                                                    context,
+                                                    "Ocurrió un error al registrarte: ${dbError.message}",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                auth.currentUser?.delete()
+                                            }
+                                    }
+                                } else {
+                                    val errorMessage = when (authTask.exception) {
+                                        is FirebaseAuthUserCollisionException -> "El correo ya está registrado"
+                                        is FirebaseAuthWeakPasswordException -> "La contraseña no es segura"
+                                        is FirebaseAuthInvalidCredentialsException -> "Formato de correo inválido"
+                                        is FirebaseAuthInvalidUserException -> "Usuario deshabilitado, eliminado o corrupto"
+                                        else -> "Error en el registro, inténtelo de nuevo"
+                                    }
+                                    Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+                                }
+                            }
+                    }
+                }
+            }, modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Registrarse")
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "¿Ya tienes una cuenta?", color = Color.Gray
+            )
+            TextButton(
+                onClick = { navController.navigate(Screen.Login.route) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Iniciar sesión")
+            }
+        }
     }
 }

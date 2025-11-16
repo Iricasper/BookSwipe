@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.aplimoviles.bookswipe.auth.HomeScreen
 import com.aplimoviles.bookswipe.auth.LoginScreen
+import com.aplimoviles.bookswipe.auth.RegisterScreen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 
@@ -30,7 +31,7 @@ fun AppNavigation(auth: FirebaseAuth, database: DatabaseReference) {
             LoginScreen(auth, navController)
         }
         composable(Screen.Register.route) {
-//            RegisterScreen(auth, database, navController)
+            RegisterScreen(auth, database, navController)
         }
     }
 }

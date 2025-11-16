@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.aplimoviles.bookswipe.navigation.AppNavigation
 import com.aplimoviles.bookswipe.ui.theme.BookSwipeTheme
+import com.aplimoviles.bookswipe.utils.SessionManager
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -21,6 +22,10 @@ class MainActivity : ComponentActivity() {
 
         auth = Firebase.auth
         database = Firebase.database.reference
+
+        if (!SessionManager.getKeepLoggedIn(this)) {
+            auth.signOut()
+        }
 
         setContent {
             BookSwipeTheme {

@@ -26,7 +26,9 @@ fun HomeScreen(auth: FirebaseAuth, navController: NavController) {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -38,12 +40,10 @@ fun HomeScreen(auth: FirebaseAuth, navController: NavController) {
             Text("Mantener sesión iniciada")
             Spacer(modifier = Modifier.width(8.dp))
             Switch(
-                checked = keepLoggedIn.value,
-                onCheckedChange = {
+                checked = keepLoggedIn.value, onCheckedChange = {
                     keepLoggedIn.value = it
                     SessionManager.setKeepLoggedIn(context, it)
-                }
-            )
+                })
         }
         Spacer(modifier = Modifier.height(32.dp))
         Button(
@@ -53,8 +53,7 @@ fun HomeScreen(auth: FirebaseAuth, navController: NavController) {
                 navController.navigate(Screen.Login.route) {
                     popUpTo(Screen.Home.route) { inclusive = true }
                 }
-            },
-            modifier = Modifier.fillMaxWidth()
+            }, modifier = Modifier.fillMaxWidth()
         ) {
             Text("Cerrar sesión")
         }
