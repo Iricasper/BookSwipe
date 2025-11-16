@@ -23,7 +23,7 @@ Vuelve a la pantalla de login
 ## Guía de uso
 1. Descomprimir el zip.
 2. Descargar el `google-services.json` desde el proyecto de **Firebase**
-3. Agregar las dependencias de google:
+3. Agregar las dependencias de google si es que no están ya:
 A nivel de proyecto `BookSwipe/build.gradle.kts`:
 ```
 plugins {
@@ -31,7 +31,7 @@ plugins {
   // ...
 
   // Add the dependency for the Google services Gradle plugin
-  id("com.google.gms.google-services") version "4.4.4" apply false
+  alias(libs.plugins.google.gms.google.services) apply false
 }
 ```
 A nivel de app `BookSwipe/src/build.gradle.kts`:
@@ -40,7 +40,7 @@ plugins {
   id("com.android.application")
 
   // Add the Google services Gradle plugin
-  id("com.google.gms.google-services")
+  alias(libs.plugins.google.gms.google.services)
   // ...
 }
 ```
