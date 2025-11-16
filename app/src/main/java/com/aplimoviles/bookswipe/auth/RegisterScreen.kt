@@ -187,9 +187,8 @@ fun RegisterScreen(auth: FirebaseAuth, database: DatabaseReference, navControlle
                         auth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener { authTask ->
                                 if (authTask.isSuccessful) {
-                                    val currentUser = auth.currentUser
-                                    currentUser?.let { user ->
-                                        val uid = user.uid
+                                    val uid = authTask.result?.user?.uid
+                                    if (uid != null) {
                                         val usuarioRegistrado = Usuario(
                                             uid = uid,
                                             nombre = name,
@@ -200,7 +199,7 @@ fun RegisterScreen(auth: FirebaseAuth, database: DatabaseReference, navControlle
                                             .setValue(usuarioRegistrado).addOnSuccessListener {
                                                 Toast.makeText(
                                                     context,
-                                                    "Usuario registrado",
+                                                    "Usuario registrado en BD",
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                                 navController.navigate(Screen.Login.route) {
@@ -212,9 +211,10 @@ fun RegisterScreen(auth: FirebaseAuth, database: DatabaseReference, navControlle
                                                 Toast.makeText(
                                                     context,
                                                     "Ocurrió un error al registrarte: ${dbError.message}",
-                                                    Toast.LENGTH_SHORT
+                                                    Toast.LENGTH_LONG
                                                 ).show()
                                                 auth.currentUser?.delete()
+                                                dbError.printStackTrace()
                                             }
                                     }
                                 } else {

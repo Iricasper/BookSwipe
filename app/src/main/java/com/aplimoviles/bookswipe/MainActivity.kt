@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         auth = Firebase.auth
-        database = Firebase.database.reference
+        database = Firebase.database("https://loginfirebase-34f3b-default-rtdb.europe-west1.firebasedatabase.app").reference
 
         if (!SessionManager.getKeepLoggedIn(this)) {
             auth.signOut()
