@@ -38,6 +38,7 @@ import androidx.navigation.NavController
 import com.aplimoviles.bookswipe.R
 import com.aplimoviles.bookswipe.navigation.Screen
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 
 @Composable
 fun LoginScreen(auth: FirebaseAuth, navController: NavController) {
@@ -107,26 +108,50 @@ fun LoginScreen(auth: FirebaseAuth, navController: NavController) {
                             context, "Los campos no pueden estar vacíos", Toast.LENGTH_SHORT
                         ).show()
                         return@Button
-                    } else if (password.length < 6) {
-                        Toast.makeText(
-                            context,
-                            "La contraseña debe tener 6 caracteres o más",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        return@Button
                     }
-
                     auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                navController.navigate(Screen.Home.route) {
-                                    popUpTo(Screen.Login.route) { inclusive = true }
+                        if (task.isSuccessful) {
+                            navController.navigate(Screen.Home.route) {
+                                popUpTo(Screen.Login.route) { inclusive = true }
+                            }
+                        } else {
+                            val exception = task.exception
+                            when {
+                                exception is FirebaseAuthException -> {
+                                    when (exception.errorCode) {
+                                        "ERROR_USER_NOT_FOUND" -> {
+                                            Toast.makeText(
+                                                context,
+                                                "Este email no está registrado",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                        }
+
+                                        "ERROR_WRONG_PASSWORD" -> {
+                                            Toast.makeText(
+                                                context, "Contraseña incorrecta", Toast.LENGTH_LONG
+                                            ).show()
+                                        }
+
+                                        else -> {
+                                            // Error predefinido
+//                                            Toast.makeText(
+//                                                context,
+//                                                "Error: ${task.exception?.message}",
+//                                                Toast.LENGTH_SHORT
+//                                            ).show()
+                                            // Error genérico
+                                            Toast.makeText(
+                                                context,
+                                                "Correo no registrado o contraseña incorrecta",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
                                 }
-                            } else {
-                                Toast.makeText(
-                                    context, "Error: ${task.exception?.message}", Toast.LENGTH_SHORT
-                                ).show()
                             }
                         }
+                    }
                 }, modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Login")
