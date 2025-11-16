@@ -22,7 +22,8 @@ También hay un botón para cerrar sesión y desmarcar automáticamente el mante
 Vuelve a la pantalla de login
 ## Guía de uso
 1. Descomprimir el zip.
-2. Agregar las dependencias de google:
+2. Descargar el `google-services.json` desde el proyecto de **Firebase**
+3. Agregar las dependencias de google:
 A nivel de proyecto `BookSwipe/build.gradle.kts`:
 ```
 plugins {
