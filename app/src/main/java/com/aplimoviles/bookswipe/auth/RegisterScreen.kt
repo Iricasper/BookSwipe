@@ -190,7 +190,6 @@ fun RegisterScreen(auth: FirebaseAuth, database: DatabaseReference, navControlle
                                     val uid = authTask.result?.user?.uid
                                     if (uid != null) {
                                         val usuarioRegistrado = Usuario(
-                                            uid = uid,
                                             nombre = name,
                                             correo = email,
                                             telefono = phone

@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.aplimoviles.bookswipe" />
-                  <option name="mobileSdkAppId" value="1:578978351903:android:d6963dd46c6da98d9b3e2a" />
-                  <option name="projectId" value="loginfirebase-34f3b" />
-                  <option name="projectNumber" value="578978351903" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
