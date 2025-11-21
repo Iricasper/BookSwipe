@@ -6,6 +6,8 @@ data class Libro(
     var nombre: String = "",
     var numPag: Int = 0,
     var blurbs: String = "",
-    var descripcion: String = ""
+    var descripcion: String = "",
+    var fechaCreacion: String = "",
+    var fechaEdicion: String = "",
 
 )

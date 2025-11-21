@@ -1,4 +1,4 @@
-package com.aplimoviles.bookswipe.auth
+package com.aplimoviles.bookswipe.ui.screens.auth
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button

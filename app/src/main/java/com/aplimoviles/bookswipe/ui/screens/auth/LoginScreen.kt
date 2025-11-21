@@ -1,4 +1,4 @@
-package com.aplimoviles.bookswipe.auth
+package com.aplimoviles.bookswipe.ui.screens.auth
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
